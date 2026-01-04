@@ -51,14 +51,14 @@
 {{ with index .Params.variants 0 }}
 {{ if .actualPrice }}
 <div class="flex items-center gap-3">
-<p class="text-2xl font-semibold text-soft-black dark:text-neutral-100">{{ .actualPrice }}</p>
+<p class="text-2xl font-semibold text-soft-black dark:text-neutral-100">{{ .actualPrice | replaceRE `^[^\d]+` "$" }}</p>
 </div>
 {{ end }}
 {{ end }}
 </div>
 <!-- Description -->
 <div class="space-y-3">
-<h3 class="text-sm font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Description</h3>
+<h3 class="text-sm font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Descripción</h3>
 <p class="text-base leading-loose text-neutral-700 dark:text-neutral-300">
 {{ .Content }}
 </p>
@@ -67,11 +67,11 @@
 <div class="grid grid-cols-2 gap-4 py-2">
 <div class="rounded-lg bg-white p-4 dark:bg-white/5 border border-neutral-100 dark:border-neutral-800">
 <span class="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Material</span>
-<span class="block font-medium">14k Recycled Gold</span>
+<span class="block font-medium">Oro reciclado 14k</span>
 </div>
 <div class="rounded-lg bg-white p-4 dark:bg-white/5 border border-neutral-100 dark:border-neutral-800">
-<span class="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Chain Length</span>
-<span class="block font-medium">18-20 inches</span>
+<span class="block text-xs text-neutral-500 dark:text-neutral-400 mb-1">Largo de cadena</span>
+<span class="block font-medium">18-20 pulgadas</span>
 </div>
 </div>
 <!-- Primary Action -->
@@ -80,7 +80,7 @@
 <div class="pt-4">
 <button class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
 <span class="material-symbols-outlined">shopping_cart</span>
-                        Add to Cart
+                        Agregar al carrito
                     </button>
 </div>
 {{ end }}
@@ -98,8 +98,8 @@
 <!-- Related Products -->
 <div class="px-6 flex flex-col gap-6 pb-8">
 <div class="flex items-center justify-between">
-<h2 class="text-xl font-bold text-soft-black dark:text-white">You might also love</h2>
-<a class="text-sm font-medium text-primary hover:underline" href="/products">View All</a>
+<h2 class="text-xl font-bold text-soft-black dark:text-white">También te podría gustar</h2>
+<a class="text-sm font-medium text-primary hover:underline" href="/products">Ver todo</a>
 </div>
 <div class="grid grid-cols-2 gap-x-4 gap-y-8">
 {{ range $index, $page := first 4 $related }}
@@ -113,7 +113,7 @@
 </div>
 <div class="flex flex-col gap-1">
 <h3 class="font-bold text-soft-black dark:text-white truncate">{{ $page.Title }}</h3>
-<p class="text-sm text-neutral-600 dark:text-neutral-400">{{ with index $page.Params.variants 0 }}{{ .actualPrice }}{{ end }}</p>
+<p class="text-sm text-neutral-600 dark:text-neutral-400">{{ with index $page.Params.variants 0 }}{{ .actualPrice | replaceRE `^[^\d]+` "$" }}{{ end }}</p>
 </div>
 </a>
 </div>
@@ -127,11 +127,11 @@
 {{ if .actualPrice }}
 <div class="fixed bottom-0 left-0 w-full bg-white/80 dark:bg-[#221d10]/90 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 p-4 md:hidden z-40 flex items-center gap-4">
 <div class="flex flex-col">
-<span class="text-xs text-neutral-500 dark:text-neutral-400">Total Price</span>
-<span class="font-bold text-lg text-soft-black dark:text-white">{{ .actualPrice }}</span>
+<span class="text-xs text-neutral-500 dark:text-neutral-400">Precio total</span>
+<span class="font-bold text-lg text-soft-black dark:text-white">{{ .actualPrice | replaceRE `^[^\d]+` "$" }}</span>
 </div>
 <button class="flex-1 h-12 bg-primary hover:bg-[#d9a710] rounded-lg text-soft-black font-bold flex items-center justify-center shadow-lg shadow-primary/20">
-                 Add to Cart
+                 Agregar al carrito
              </button>
 </div>
 {{ end }}
