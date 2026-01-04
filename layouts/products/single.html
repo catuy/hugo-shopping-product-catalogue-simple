@@ -47,18 +47,9 @@
 <div class="space-y-2">
 <div class="flex items-start justify-between gap-4">
 <h1 class="text-3xl font-bold leading-tight tracking-tight text-soft-black dark:text-white">{{ .Title }}</h1>
-<button class="shrink-0 rounded-full p-2 text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-primary transition-colors">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">favorite</span>
-</button>
 </div>
 <div class="flex items-center gap-3">
 <p class="text-2xl font-semibold text-soft-black dark:text-neutral-100">{{ with index .Params.variants 0 }}{{ .actualPrice }}{{ end }}</p>
-<div class="h-4 w-[1px] bg-neutral-300 dark:bg-neutral-700"></div>
-<div class="flex items-center gap-1">
-<span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-sm font-medium">4.8</span>
-<span class="text-sm text-neutral-500 dark:text-neutral-400">(128 reviews)</span>
-</div>
 </div>
 </div>
 <!-- Description -->
