@@ -80,7 +80,7 @@
 <div class="pt-4">
 {{ $mpActive := .Site.Params.payments.mercadopago }}
 {{ $waActive := .Site.Params.payments.whatsapp }}
-{{ $mpLink := .mp_link }}
+{{ $mpLink := .Params.mp_link }}
 {{ $activeCount := 0 }}
 {{ if $mpActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
 {{ if $waActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
@@ -159,7 +159,7 @@
       <div class="space-y-4">
         {{ $mpActive := .Site.Params.payments.mercadopago }}
         {{ $waActive := .Site.Params.payments.whatsapp }}
-        {{ $mpLink := .mp_link }}
+        {{ $mpLink := .Params.mp_link }}
 
         {{ if $mpActive }}
         <a href="{{ $mpLink }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
@@ -192,7 +192,7 @@
       <div class="space-y-4">
         {{ $mpActive := .Site.Params.payments.mercadopago }}
         {{ $waActive := .Site.Params.payments.whatsapp }}
-        {{ $mpLink := .mp_link }}
+        {{ $mpLink := .Params.mp_link }}
 
         {{ if $mpActive }}
         <a href="{{ $mpLink }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
@@ -226,7 +226,7 @@
 </div>
 {{ $mpActive := $.Site.Params.payments.mercadopago }}
 {{ $waActive := $.Site.Params.payments.whatsapp }}
-{{ $mpLink := $.mp_link }}
+{{ $mpLink := $.Params.mp_link }}
 {{ $activeCount := 0 }}
 {{ if $mpActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
 {{ if $waActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
