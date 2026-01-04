@@ -60,7 +60,29 @@
 {{ end }}
 {{ if $price }}
 <div class="flex items-center gap-3">
+{{ if .Params.comparePrice }}
+<span class="text-lg text-neutral-500 line-through">{{ .Params.comparePrice | replaceRE `^[^\d]+` "$" }}</span>
+{{ end }}
 <p class="text-2xl font-semibold text-soft-black dark:text-neutral-100">{{ $price | replaceRE `^[^\d]+` "$" }}</p>
+{{ if not .Params.inStock }}
+<span class="text-lg font-bold text-red-600">— Agotado</span>
+{{ end }}
+</div>
+{{ end }}
+
+<!-- Product Options/Variants -->
+{{ if .Params.options }}
+<div class="space-y-3">
+{{ range $index, $element := .Params.options }}
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-neutral-700 dark:text-neutral-300">{{ $index | humanize }}</label>
+<select class="select-{{ $index }} px-3 py-2 border border-neutral-300 dark:border-neutral-700 rounded-lg bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary">
+{{ range $element }}
+<option>{{ . }}</option>
+{{ end }}
+</select>
+</div>
+{{ end }}
 </div>
 {{ end }}
 </div>
@@ -358,4 +380,9 @@ function closePaymentDrawer() {
     }
 }
 </script>
+
+<script>
+    var productVariants = [];
+</script>
+
 {{ end }}
