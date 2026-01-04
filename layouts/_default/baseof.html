@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}">
+<html class="light" lang="{{ .Site.LanguageCode }}">
 <head>{{ partial "head.html" . }}</head>
-<body>
+<body class="bg-background-light dark:bg-background-dark text-[#181611] dark:text-white font-display">
     {{ block "main" . }}
     {{ end }}
     {{ partial "scripts.html" . }}

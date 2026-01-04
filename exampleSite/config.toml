@@ -1,7 +1,7 @@
 baseURL = "http://example.org/"
 languageCode = "en-us"
-title = "Awesome Lighting Inc."
-theme = "hugo-shopping-product-catalogue-simple"
+title = "Microstore - Handmade Jewelry"
+theme = "tienda-hugo"
 themesDir = "../.."
 [Params]
-description = ""
+description = "Handmade Jewelry"
