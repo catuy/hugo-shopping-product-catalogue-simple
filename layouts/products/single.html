@@ -49,22 +49,26 @@
 <h1 class="text-3xl font-bold leading-tight tracking-tight text-soft-black dark:text-white">{{ .Title }}</h1>
 </div>
 {{ $price := "" }}
-{{ if .Params.actualPrice }}
-  {{ $price = .Params.actualPrice }}
+{{ $actualPrice := .Params.actualPrice | default "" }}
+{{ $comparePrice := .Params.comparePrice | default "" }}
+{{ $inStock := .Params.inStock | default true }}
+{{ if $actualPrice }}
+  {{ $price = $actualPrice }}
 {{ else if (and .Params.variants (gt (len .Params.variants) 0)) }}
   {{ with index .Params.variants 0 }}
-    {{ if .actualPrice }}
-      {{ $price = .actualPrice }}
+    {{ $variantPrice := .actualPrice | default "" }}
+    {{ if $variantPrice }}
+      {{ $price = $variantPrice }}
     {{ end }}
   {{ end }}
 {{ end }}
 {{ if $price }}
 <div class="flex items-center gap-3">
-{{ if .Params.comparePrice }}
-<span class="text-lg text-neutral-500 line-through">{{ .Params.comparePrice | replaceRE `^[^\d]+` "$" }}</span>
+{{ if $comparePrice }}
+<span class="text-lg text-neutral-500 line-through">{{ $comparePrice | replaceRE `^[^\d]+` "$" }}</span>
 {{ end }}
 <p class="text-2xl font-semibold text-soft-black dark:text-neutral-100">{{ $price | replaceRE `^[^\d]+` "$" }}</p>
-{{ if not .Params.inStock }}
+{{ if not $inStock }}
 <span class="text-lg font-bold text-red-600">— Agotado</span>
 {{ end }}
 </div>
@@ -121,9 +125,9 @@
 
 {{ if $hasPrice }}
 <div class="pt-4">
-{{ $mpActive := and .Site.Params.payments.mercadopago .Params.mp_link }}
-{{ $waActive := .Site.Params.payments.whatsapp }}
-{{ $mpLink := .Params.mp_link }}
+{{ $mpActive := and (.Site.Params.payments.mercadopago | default false) (.Params.mp_link | default "") }}
+{{ $waActive := .Site.Params.payments.whatsapp | default false }}
+{{ $mpLink := .Params.mp_link | default "" }}
 {{ $activeCount := 0 }}
 {{ if $mpActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
 {{ if $waActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
@@ -280,9 +284,9 @@
 <span class="text-xs text-neutral-500 dark:text-neutral-400">Precio total</span>
 <span class="font-bold text-lg text-soft-black dark:text-white">{{ $productPriceSticky | replaceRE `^[^\d]+` "$" }}</span>
 </div>
-{{ $mpActive := and $.Site.Params.payments.mercadopago $.Params.mp_link }}
-{{ $waActive := $.Site.Params.payments.whatsapp }}
-{{ $mpLink := $.Params.mp_link }}
+{{ $mpActive := and ($.Site.Params.payments.mercadopago | default false) ($.Params.mp_link | default "") }}
+{{ $waActive := $.Site.Params.payments.whatsapp | default false }}
+{{ $mpLink := $.Params.mp_link | default "" }}
 {{ $activeCount := 0 }}
 {{ if $mpActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
 {{ if $waActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
