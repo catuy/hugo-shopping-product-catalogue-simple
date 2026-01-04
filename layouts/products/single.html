@@ -100,9 +100,13 @@
 </div>
 <div class="grid grid-cols-2 gap-x-4 gap-y-8">
 {{ $currentCategory := index .Params.categories 0 }}
-{{ range $index, $page := where .Site.RegularPages ".Type" "products" }}
-{{ if and (ne $page.Permalink $.Permalink) (in $page.Params.categories $currentCategory) }}
-{{ if lt $index 4 }}
+{{ $related := slice }}
+{{ range where .Site.RegularPages ".Type" "products" }}
+{{ if and (ne .Permalink $.Permalink) (in .Params.categories $currentCategory) }}
+{{ $related = $related | append . }}
+{{ end }}
+{{ end }}
+{{ range $index, $page := first 4 $related }}
 <div class="group flex flex-col gap-3 cursor-pointer">
 <a href="{{ $page.Permalink }}" class="flex flex-col gap-3">
 <div class="w-full aspect-[3/4] overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800 relative">
@@ -117,8 +121,6 @@
 </div>
 </a>
 </div>
-{{ end }}
-{{ end }}
 {{ end }}
 </div>
 </div>
