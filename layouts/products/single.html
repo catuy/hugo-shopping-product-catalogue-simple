@@ -48,12 +48,20 @@
 <div class="flex items-start justify-between gap-4">
 <h1 class="text-3xl font-bold leading-tight tracking-tight text-soft-black dark:text-white">{{ .Title }}</h1>
 </div>
-{{ with index .Params.variants 0 }}
-{{ if .actualPrice }}
-<div class="flex items-center gap-3">
-<p class="text-2xl font-semibold text-soft-black dark:text-neutral-100">{{ .actualPrice | replaceRE `^[^\d]+` "$" }}</p>
-</div>
+{{ $price := "" }}
+{{ if .Params.actualPrice }}
+  {{ $price = .Params.actualPrice }}
+{{ else if (and .Params.variants (gt (len .Params.variants) 0)) }}
+  {{ with index .Params.variants 0 }}
+    {{ if .actualPrice }}
+      {{ $price = .actualPrice }}
+    {{ end }}
+  {{ end }}
 {{ end }}
+{{ if $price }}
+<div class="flex items-center gap-3">
+<p class="text-2xl font-semibold text-soft-black dark:text-neutral-100">{{ $price | replaceRE `^[^\d]+` "$" }}</p>
+</div>
 {{ end }}
 </div>
 <!-- Description -->
@@ -75,8 +83,21 @@
 </div>
 </div>
 <!-- Primary Action -->
-{{ with index .Params.variants 0 }}
-{{ if .actualPrice }}
+{{ $hasPrice := false }}
+{{ $productPrice := "" }}
+{{ if .Params.actualPrice }}
+  {{ $hasPrice = true }}
+  {{ $productPrice = .Params.actualPrice }}
+{{ else if (and .Params.variants (gt (len .Params.variants) 0)) }}
+  {{ with index .Params.variants 0 }}
+    {{ if .actualPrice }}
+      {{ $hasPrice = true }}
+      {{ $productPrice = .actualPrice }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if $hasPrice }}
 <div class="pt-4">
 {{ $mpActive := .Site.Params.payments.mercadopago }}
 {{ $waActive := .Site.Params.payments.whatsapp }}
@@ -93,7 +114,7 @@
     Comprar
   </a>
   {{ else if $waActive }}
-  <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ .Title | urlquery }}%20por%20{{ .actualPrice | replaceRE `^[^\d]+` "$" | urlquery }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
+  <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ .Title | urlquery }}%20por%20{{ $productPrice | replaceRE `^[^\d]+` "$" | urlquery }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
     <span class="material-symbols-outlined">shopping_cart</span>
     Comprar
   </a>
@@ -106,7 +127,6 @@
   </button>
 {{ end }}
 </div>
-{{ end }}
 {{ end }}
 </div>
 {{ $currentCategory := index .Params.categories 0 }}
@@ -217,12 +237,25 @@
 </div>
 
 <!-- Sticky Bottom CTA for Mobile feel (Optional based on preference, but good for UX) -->
-{{ with index .Params.variants 0 }}
-{{ if .actualPrice }}
+{{ $hasPriceSticky := false }}
+{{ $productPriceSticky := "" }}
+{{ if .Params.actualPrice }}
+  {{ $hasPriceSticky = true }}
+  {{ $productPriceSticky = .Params.actualPrice }}
+{{ else if (and .Params.variants (gt (len .Params.variants) 0)) }}
+  {{ with index .Params.variants 0 }}
+    {{ if .actualPrice }}
+      {{ $hasPriceSticky = true }}
+      {{ $productPriceSticky = .actualPrice }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if $hasPriceSticky }}
 <div class="fixed bottom-0 left-0 w-full bg-white/80 dark:bg-[#221d10]/90 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 p-4 md:hidden z-40 flex items-center gap-4">
 <div class="flex flex-col">
 <span class="text-xs text-neutral-500 dark:text-neutral-400">Precio total</span>
-<span class="font-bold text-lg text-soft-black dark:text-white">{{ .actualPrice | replaceRE `^[^\d]+` "$" }}</span>
+<span class="font-bold text-lg text-soft-black dark:text-white">{{ $productPriceSticky | replaceRE `^[^\d]+` "$" }}</span>
 </div>
 {{ $mpActive := $.Site.Params.payments.mercadopago }}
 {{ $waActive := $.Site.Params.payments.whatsapp }}
@@ -238,7 +271,7 @@
     Comprar
   </a>
   {{ else if $waActive }}
-  <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ $.Title | urlquery }}%20por%20{{ .actualPrice | replaceRE `^[^\d]+` "$" | urlquery }}" class="flex-1 h-12 bg-primary hover:bg-[#d9a710] rounded-lg text-soft-black font-bold flex items-center justify-center shadow-lg shadow-primary/20">
+  <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ $.Title | urlquery }}%20por%20{{ $productPriceSticky | replaceRE `^[^\d]+` "$" | urlquery }}" class="flex-1 h-12 bg-primary hover:bg-[#d9a710] rounded-lg text-soft-black font-bold flex items-center justify-center shadow-lg shadow-primary/20">
     Comprar
   </a>
   {{ end }}
@@ -249,7 +282,6 @@
   </button>
 {{ end }}
 </div>
-{{ end }}
 {{ end }}
 </div>
 <script>
