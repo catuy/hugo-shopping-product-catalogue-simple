@@ -252,7 +252,7 @@
 {{ end }}
 
 {{ if $hasPriceSticky }}
-<div class="fixed bottom-0 left-0 w-full bg-white/80 dark:bg-[#221d10]/90 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 p-4 md:hidden z-40 flex items-center gap-4">
+<div class="fixed bottom-0 left-0 w-full bg-white/80 dark:bg-[#221d10]/90 backdrop-blur-md border-t border-neutral-200 dark:border-neutral-800 p-4 z-40 flex items-center gap-4">
 <div class="flex flex-col">
 <span class="text-xs text-neutral-500 dark:text-neutral-400">Precio total</span>
 <span class="font-bold text-lg text-soft-black dark:text-white">{{ $productPriceSticky | replaceRE `^[^\d]+` "$" }}</span>
