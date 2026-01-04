@@ -212,14 +212,14 @@
       <h3 class="text-xl font-bold text-soft-black dark:text-white mb-6">Elegí cómo querés pagar</h3>
 
       <div class="space-y-4">
-        {{ if and .Site.Params.payments.mercadopago .Params.mp_link }}
-        <a href="{{ .Params.mp_link }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
+        {{ if and (.Site.Params.payments.mercadopago | default false) (.Params.mp_link | default "") }}
+        <a href="{{ .Params.mp_link | default "#" }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
           <span class="material-symbols-outlined">credit_card</span>
           Comprar con Mercado Pago
         </a>
         {{ end }}
 
-        {{ if .Site.Params.payments.whatsapp }}
+        {{ if .Site.Params.payments.whatsapp | default false }}
         <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ .Title | urlquery }}%20por%20{{ $productPrice | replaceRE `^[^\d]+` "$" | urlquery }}" class="w-full h-14 bg-green-600 hover:bg-green-700 active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-white font-bold text-lg shadow-sm">
           <span class="material-symbols-outlined">phone</span>
           Coordinar por WhatsApp
