@@ -5,6 +5,7 @@
     "categories": ["Wall Light"],
     "images": ["img/alessa/1.png", "img/alessa/2.jpg", "img/alessa/3.jpg", "img/alessa/4.jpg", "img/alessa/5.jpg", "img/alessa/6.jpg"],
     "thumbnailImage": "img/alessa/thumnail.png",
+    "mp_link": "https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=123456789",
     "actualPrice": null,
     "comparePrice": null,
     "inStock": null,

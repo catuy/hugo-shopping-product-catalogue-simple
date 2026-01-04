@@ -5,3 +5,6 @@ theme = "tienda-hugo"
 themesDir = "../.."
 [Params]
 description = "Handmade Jewelry"
+[Params.payments]
+mercadopago = true
+whatsapp = true

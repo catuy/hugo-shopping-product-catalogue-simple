@@ -78,10 +78,33 @@
 {{ with index .Params.variants 0 }}
 {{ if .actualPrice }}
 <div class="pt-4">
-<button class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
-<span class="material-symbols-outlined">shopping_cart</span>
-                        Agregar al carrito
-                    </button>
+{{ $mpActive := .Site.Params.payments.mercadopago }}
+{{ $waActive := .Site.Params.payments.whatsapp }}
+{{ $mpLink := .mp_link }}
+{{ $activeCount := 0 }}
+{{ if $mpActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
+{{ if $waActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
+
+{{ if eq $activeCount 1 }}
+  {{/* Solo un método activo - ir directamente */}}
+  {{ if $mpActive }}
+  <a href="{{ $mpLink }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
+    <span class="material-symbols-outlined">shopping_cart</span>
+    Comprar
+  </a>
+  {{ else if $waActive }}
+  <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ .Title | urlquery }}%20por%20{{ .actualPrice | replaceRE `^[^\d]+` "$" | urlquery }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
+    <span class="material-symbols-outlined">shopping_cart</span>
+    Comprar
+  </a>
+  {{ end }}
+{{ else if gt $activeCount 1 }}
+  {{/* Múltiples métodos - abrir drawer */}}
+  <button onclick="togglePaymentDrawer()" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
+    <span class="material-symbols-outlined">shopping_cart</span>
+    Comprar
+  </button>
+{{ end }}
 </div>
 {{ end }}
 {{ end }}
@@ -122,6 +145,77 @@
 </div>
 {{ end }}
 </main>
+
+<!-- Payment Methods Drawer/Modal -->
+<div id="payment-drawer" class="fixed inset-0 z-50 hidden md:flex md:items-center md:justify-center">
+  <!-- Overlay -->
+  <div onclick="closePaymentDrawer()" class="absolute inset-0 bg-black/50 backdrop-blur-sm opacity-0 transition-opacity" id="payment-overlay"></div>
+
+  <!-- Modal for Desktop -->
+  <div class="relative bg-background-light dark:bg-background-dark rounded-2xl p-8 mx-4 max-w-md w-full opacity-0 scale-95 transition-all transform md:block hidden" id="payment-modal">
+    <div class="text-center">
+      <h3 class="text-xl font-bold text-soft-black dark:text-white mb-6">Elegí cómo querés pagar</h3>
+
+      <div class="space-y-4">
+        {{ $mpActive := .Site.Params.payments.mercadopago }}
+        {{ $waActive := .Site.Params.payments.whatsapp }}
+        {{ $mpLink := .mp_link }}
+
+        {{ if $mpActive }}
+        <a href="{{ $mpLink }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
+          <span class="material-symbols-outlined">credit_card</span>
+          Comprar con Mercado Pago
+        </a>
+        {{ end }}
+
+        {{ if $waActive }}
+        <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ .Title | urlquery }}%20por%20{{ with index .Params.variants 0 }}{{ .actualPrice | replaceRE `^[^\d]+` "$" | urlquery }}{{ end }}" class="w-full h-14 bg-green-600 hover:bg-green-700 active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-white font-bold text-lg shadow-sm">
+          <span class="material-symbols-outlined">phone</span>
+          Coordinar por WhatsApp
+        </a>
+        {{ end }}
+      </div>
+
+      <button onclick="closePaymentDrawer()" class="mt-6 text-neutral-500 hover:text-soft-black dark:hover:text-white transition-colors">
+        Cancelar
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom Sheet for Mobile -->
+  <div class="absolute bottom-0 left-0 right-0 bg-background-light dark:bg-background-dark rounded-t-2xl p-6 transform translate-y-full transition-transform md:hidden" id="payment-sheet">
+    <div class="w-12 h-1 bg-neutral-300 dark:bg-neutral-700 rounded-full mx-auto mb-6"></div>
+
+    <div class="text-center">
+      <h3 class="text-xl font-bold text-soft-black dark:text-white mb-6">Elegí cómo querés pagar</h3>
+
+      <div class="space-y-4">
+        {{ $mpActive := .Site.Params.payments.mercadopago }}
+        {{ $waActive := .Site.Params.payments.whatsapp }}
+        {{ $mpLink := .mp_link }}
+
+        {{ if $mpActive }}
+        <a href="{{ $mpLink }}" class="w-full h-14 bg-primary hover:bg-[#d9a710] active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-soft-black font-bold text-lg shadow-sm">
+          <span class="material-symbols-outlined">credit_card</span>
+          Comprar con Mercado Pago
+        </a>
+        {{ end }}
+
+        {{ if $waActive }}
+        <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ .Title | urlquery }}%20por%20{{ with index .Params.variants 0 }}{{ .actualPrice | replaceRE `^[^\d]+` "$" | urlquery }}{{ end }}" class="w-full h-14 bg-green-600 hover:bg-green-700 active:scale-[0.98] transition-all rounded-lg flex items-center justify-center gap-2 text-white font-bold text-lg shadow-sm">
+          <span class="material-symbols-outlined">phone</span>
+          Coordinar por WhatsApp
+        </a>
+        {{ end }}
+      </div>
+
+      <button onclick="closePaymentDrawer()" class="mt-6 text-neutral-500 hover:text-soft-black dark:hover:text-white transition-colors">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- Sticky Bottom CTA for Mobile feel (Optional based on preference, but good for UX) -->
 {{ with index .Params.variants 0 }}
 {{ if .actualPrice }}
@@ -130,9 +224,30 @@
 <span class="text-xs text-neutral-500 dark:text-neutral-400">Precio total</span>
 <span class="font-bold text-lg text-soft-black dark:text-white">{{ .actualPrice | replaceRE `^[^\d]+` "$" }}</span>
 </div>
-<button class="flex-1 h-12 bg-primary hover:bg-[#d9a710] rounded-lg text-soft-black font-bold flex items-center justify-center shadow-lg shadow-primary/20">
-                 Agregar al carrito
-             </button>
+{{ $mpActive := $.Site.Params.payments.mercadopago }}
+{{ $waActive := $.Site.Params.payments.whatsapp }}
+{{ $mpLink := $.mp_link }}
+{{ $activeCount := 0 }}
+{{ if $mpActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
+{{ if $waActive }}{{ $activeCount = add $activeCount 1 }}{{ end }}
+
+{{ if eq $activeCount 1 }}
+  {{/* Solo un método activo - ir directamente */}}
+  {{ if $mpActive }}
+  <a href="{{ $mpLink }}" class="flex-1 h-12 bg-primary hover:bg-[#d9a710] rounded-lg text-soft-black font-bold flex items-center justify-center shadow-lg shadow-primary/20">
+    Comprar
+  </a>
+  {{ else if $waActive }}
+  <a href="https://wa.me/5491234567890?text=Hola!%20Me%20interesa%20comprar%20{{ $.Title | urlquery }}%20por%20{{ .actualPrice | replaceRE `^[^\d]+` "$" | urlquery }}" class="flex-1 h-12 bg-primary hover:bg-[#d9a710] rounded-lg text-soft-black font-bold flex items-center justify-center shadow-lg shadow-primary/20">
+    Comprar
+  </a>
+  {{ end }}
+{{ else if gt $activeCount 1 }}
+  {{/* Múltiples métodos - abrir drawer */}}
+  <button onclick="togglePaymentDrawer()" class="flex-1 h-12 bg-primary hover:bg-[#d9a710] rounded-lg text-soft-black font-bold flex items-center justify-center shadow-lg shadow-primary/20">
+    Comprar
+  </button>
+{{ end }}
 </div>
 {{ end }}
 {{ end }}
@@ -159,5 +274,58 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Función para abrir el drawer/modal de métodos de pago
+function togglePaymentDrawer() {
+    const drawer = document.getElementById('payment-drawer');
+    const overlay = document.getElementById('payment-overlay');
+    const modal = document.getElementById('payment-modal');
+    const sheet = document.getElementById('payment-sheet');
+
+    drawer.classList.remove('hidden');
+
+    // Mostrar overlay con transición
+    setTimeout(() => {
+        overlay.classList.add('opacity-100');
+    }, 10);
+
+    // Mostrar modal/sheet con animación
+    setTimeout(() => {
+        if (window.innerWidth >= 768) {
+            // Desktop: mostrar modal
+            modal.classList.remove('opacity-0', 'scale-95');
+            modal.classList.add('opacity-100', 'scale-100');
+        } else {
+            // Mobile: mostrar bottom sheet
+            sheet.classList.remove('translate-y-full');
+            sheet.classList.add('translate-y-0');
+        }
+    }, 50);
+}
+
+// Función para cerrar el drawer/modal de métodos de pago
+function closePaymentDrawer() {
+    const drawer = document.getElementById('payment-drawer');
+    const overlay = document.getElementById('payment-overlay');
+    const modal = document.getElementById('payment-modal');
+    const sheet = document.getElementById('payment-sheet');
+
+    // Ocultar overlay
+    overlay.classList.remove('opacity-100');
+
+    // Ocultar modal/sheet con animación
+    if (window.innerWidth >= 768) {
+        modal.classList.remove('opacity-100', 'scale-100');
+        modal.classList.add('opacity-0', 'scale-95');
+    } else {
+        sheet.classList.remove('translate-y-0');
+        sheet.classList.add('translate-y-full');
+    }
+
+    // Ocultar drawer completamente
+    setTimeout(() => {
+        drawer.classList.add('hidden');
+    }, 300);
+}
 </script>
 {{ end }}
