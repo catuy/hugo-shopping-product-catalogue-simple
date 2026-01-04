@@ -178,7 +178,17 @@
 </div>
 <div class="flex flex-col gap-1">
 <h3 class="font-bold text-soft-black dark:text-white truncate">{{ $page.Title }}</h3>
-<p class="text-sm text-neutral-600 dark:text-neutral-400">{{ $relatedPrice := "" }}{{ if $page.Params.actualPrice }}{{ $relatedPrice = $page.Params.actualPrice }}{{ else if (and $page.Params.variants (gt (len $page.Params.variants) 0)) }}{{ with index $page.Params.variants 0 }}{{ if .actualPrice }}{{ $relatedPrice = .actualPrice }}{{ end }}{{ end }}{{ end }}{{ if $relatedPrice }}{{ $relatedPrice | replaceRE `^[^\d]+` "$" }}{{ end }}</p>
+<p class="text-sm text-neutral-600 dark:text-neutral-400">
+{{ if $page.Params.actualPrice }}
+  {{ $page.Params.actualPrice | replaceRE `^[^\d]+` "$" }}
+{{ else if (and $page.Params.variants (gt (len $page.Params.variants) 0)) }}
+  {{ with index $page.Params.variants 0 }}
+    {{ if .actualPrice }}
+      {{ .actualPrice | replaceRE `^[^\d]+` "$" }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+</p>
 </div>
 </a>
 </div>
